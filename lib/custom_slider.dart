@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
-class CustomSlider extends StatelessWidget {
+class CustomSlider extends StatefulWidget {
   final Function onChanged;
   final double currentSliderValue;
   final String titleOfSlider;
+  
 
   CustomSlider({
-    Key key,
     this.onChanged,
     this.currentSliderValue,
     this.titleOfSlider,
-  }) : super(key: key);
+  });
+
+  @override
+  _CustomSliderState createState() => _CustomSliderState();
+}
+
+class _CustomSliderState extends State<CustomSlider> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -22,23 +28,23 @@ class CustomSlider extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  currentSliderValue.toString(),
+                  widget.currentSliderValue.toString(),
                   style: TextStyle(fontSize: 22),
                 ),
               ),
               Text(
-                'Value of $titleOfSlider',
+                'Value of ${widget.titleOfSlider}',
                 style: TextStyle(fontSize: 23),
               ),
             ],
           ),
         ),
         Slider(
-          value: currentSliderValue,
+          value: widget.currentSliderValue,
           min: 0,
           max: 255,
           divisions: 25,
-          onChanged: onChanged,
+          onChanged: widget.onChanged,
         ),
       ],
     );

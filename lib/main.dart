@@ -1,3 +1,4 @@
+import 'package:change_color_app/text_for_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'custom_slider.dart';
@@ -6,25 +7,27 @@ void main() {
   runApp(MyApp());
 }
 
+double _currentSliderValue = 10;
+enum _generationMode { random, manual }
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-// enum _mode{random, manual}
-
 class _MyAppState extends State<MyApp> {
+  List<Widget> scoreKeeper = [];
+
   Color randomColorOfScreen;
   math.Random random = new math.Random();
 
-  double _currentSliderValueA = 10;
-  double _currentSliderValueB = 10;
-  double _currentSliderValueC = 10;
-  double _currentSliderValueD = 10;
+  _generationMode _mode = _generationMode.random;
+
+  double _currentSliderValue = 10;
 
   List<bool> _selections = List.generate(2, (_) => false);
 
-  void colorGenerator() {
+  void randomColorGenerator() {
     if (_selections[0] == true) {
       setState(() {
         randomColorOfScreen = Color.fromARGB(
@@ -41,23 +44,28 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: colorGenerator,
+      onTap: randomColorGenerator,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           backgroundColor: randomColorOfScreen,
-          body: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 30),
-                  child: ToggleButtons(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Center(
+                  child: _display(_mode),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 15, 15),
+                child: Stack(alignment: Alignment.bottomRight, children: [
+                  ToggleButtons(
                     color: Colors.black,
+                    borderColor: Colors.red[700],
                     selectedColor: Colors.amberAccent,
-                    disabledColor: Colors.green[100],
-                    fillColor: Colors.deepPurple,
+                    disabledColor: Colors.grey,
+                    fillColor: Colors.orange,
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -70,82 +78,81 @@ class _MyAppState extends State<MyApp> {
                     ],
                     onPressed: (int index) {
                       setState(() {
-//  switch(_mode) {
-//     case _mode.random: print("This is not the correct case.");
-//     break;
-//     case _mode.manual: print("This is not the correct case.");
-//     break;
-//   }
-// }
-
                         for (int buttonIndex = 0;
                             buttonIndex < _selections.length;
                             buttonIndex++) {
                           if (buttonIndex == index) {
                             _selections[buttonIndex] = true;
+                            _mode = _generationMode.manual;
                           } else {
                             _selections[buttonIndex] = false;
+                            _mode = _generationMode.random;
                           }
                         }
+                        print('$_mode');
                       });
                     },
                     isSelected: _selections,
                   ),
-                ),
-                Container(
-                  child: Text(
-                    'Hey there!',
-                    style: TextStyle(fontSize: 30, color: Colors.black),
-                  ),
-                ),
-                Column(
-                  children: [
-                    CustomSlider(
-                      currentSliderValue: _currentSliderValueA,
-                      titleOfSlider: 'Alfa',
-                      onChanged: (_range) {
-                        setState(() {
-                          _currentSliderValueA = _range;
-                        });
-                        print({_currentSliderValueA});
-                      },
-                    ),
-                    CustomSlider(
-                      currentSliderValue: _currentSliderValueB,
-                      titleOfSlider: 'Red',
-                      onChanged: (_range) {
-                        setState(() {
-                          _currentSliderValueB = _range;
-                        });
-                        print({_currentSliderValueB});
-                      },
-                    ),
-                    CustomSlider(
-                      currentSliderValue: _currentSliderValueC,
-                      titleOfSlider: 'Green',
-                      onChanged: (_range) {
-                        setState(() {
-                          _currentSliderValueC = _range;
-                        });
-                        print({_currentSliderValueC});
-                      },
-                    ),
-                    CustomSlider(
-                      currentSliderValue: _currentSliderValueD,
-                      titleOfSlider: 'Blue',
-                      onChanged: (_range) {
-                        setState(() {
-                          _currentSliderValueD = _range;
-                        });
-                        print({_currentSliderValueD});
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                ]),
+              ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+Widget _display(modeOfState) {
+  if (modeOfState == _generationMode.random) {
+    return TextForScreen();
+  } else {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomSlider(
+            currentSliderValue: _currentSliderValue,
+            titleOfSlider: 'Alfa',
+            onChanged: (_range) {
+              setState(() {
+                _currentSliderValue = _range;
+              });
+              print({_currentSliderValue});
+            },
+          ),
+          // CustomSlider(
+          //   currentSliderValue: 10,
+          //   onChanged: changeOfSliderValue(_currentSliderValue),
+          //   titleOfSlider: 'Alfa',
+          // ),
+          // CustomSlider(
+          //   currentSliderValue: 10,
+          //   onChanged: null,
+          //   titleOfSlider: 'Red',
+          // ),
+          // CustomSlider(
+          //   currentSliderValue: 10,
+          //   onChanged: null,
+          //   titleOfSlider: 'Green',
+          // ),
+          // CustomSlider(
+          //   currentSliderValue: 10,
+          //   onChanged: null,
+          //   titleOfSlider: 'Blue',
+          // ),
+          //       Slider(
+          //   min: 0,
+          //   max: 100,
+          //   value: _value,
+          //   onChanged: (value) {
+          //     setState(() {
+          //       _value = value;
+          //     });
+          //   },
+          // ),
+        ],
       ),
     );
   }
