@@ -18,8 +18,6 @@ class _ColorChangerState extends State<ColorChanger> {
 
   _generationMode _mode = _generationMode.random;
 
-
-
   List<bool> _selections = List.generate(2, (_) => false);
 
   void randomColorGenerator() {
@@ -68,14 +66,14 @@ class _ColorChangerState extends State<ColorChanger> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('ColorPicker'),
+                        child: Text('Animated Figures'),
                       ),
                     ],
                     onPressed: (int index) {
                       setState(() {
                         for (int buttonIndex = 0;
-                        buttonIndex < _selections.length;
-                        buttonIndex++) {
+                            buttonIndex < _selections.length;
+                            buttonIndex++) {
                           if (buttonIndex == index) {
                             _selections[buttonIndex] = true;
                             _mode = _generationMode.manual;
