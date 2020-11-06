@@ -20,8 +20,14 @@ class _ColorChangerState extends State<ColorChanger> {
 
   List<bool> _selections = List.generate(2, (_) => false);
 
+  @override
+  void initState() {
+    _selections = [true, false];
+    super.initState();
+  }
+
   void randomColorGenerator() {
-    if (_selections[0] == true) {
+    if (_mode == _generationMode.random) {
       setState(() {
         randomColorOfScreen = Color.fromARGB(
             255, random.nextInt(255), random.nextInt(255), random.nextInt(255));
@@ -55,8 +61,8 @@ class _ColorChangerState extends State<ColorChanger> {
                 child: Stack(alignment: Alignment.bottomRight, children: [
                   ToggleButtons(
                     color: Colors.black,
-                    borderColor: Colors.red[700],
-                    selectedColor: Colors.amberAccent,
+                    borderColor: Colors.orange,
+                    selectedColor: Colors.white,
                     disabledColor: Colors.grey,
                     fillColor: Colors.orange,
                     children: <Widget>[
@@ -75,7 +81,8 @@ class _ColorChangerState extends State<ColorChanger> {
                             buttonIndex < _selections.length;
                             buttonIndex++) {
                           if (buttonIndex == index) {
-                            _selections[buttonIndex] = true;
+                            _selections[buttonIndex] =
+                                !_selections[buttonIndex];
                             _mode = _generationMode.manual;
                           } else {
                             _selections[buttonIndex] = false;
